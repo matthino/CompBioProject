@@ -41,8 +41,6 @@ def cleanNT(file):
     pos1 = 0
     pos2 = 0
 
-    start = 0
-    end = 0
     
     # For all of the sequences in the .nt file:
     #   - Search for the first and last 5 consecutive
@@ -77,21 +75,22 @@ def cleanNT(file):
 # searching for the first and last occurance of 5 known
 # nucleotides. Returns the trimmed sequence
 def cleaner(sequence):
-    # Write the '> Line' to the output file
-    endFirstLine = sequence.find("\r\n", 1)
-    firstPart = sequence[:endFirstLine]
+    # Save the '>Organism Name' part of the sequence
+    endFirstLine = sequence.find("\n", 1)
+    firstPart = sequence[:endFirstLine] # add one to compensate second char
 
+    # Now look at the rest of the sequence.
     sequence = sequence[endFirstLine:].replace("\r", "").replace("\n","")
 
     start = 0
     end = 0
-    # Clean the front of sequence
+    # Find the new start (first instance of 5 nucleotides)
     for i in range(len(sequence)):
         if( 'N' not in sequence[i:i+5]):
             start = i
             break
         
-    # Then clean the back
+    # Then find the end (last instance of 5 nucleotides)
     for j in range(len(sequence), endFirstLine, -1):
         if( 'N' not in sequence[j-5: j]):
             end = j
@@ -114,6 +113,7 @@ def makeNice(sequence):
 
 # Given a file, counts the length of each sequence and
 # returns a list of (sequence_name, length) tuples.
+# Output the results to a text file.
 def countLengths(filename):
     # open and read in the input file
     inputFile = open(filename, "r")
