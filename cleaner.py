@@ -73,13 +73,18 @@ def cleanNT(file):
 
 
 
+# Trims the leading and trailing 'N's. It does this by
+# searching for the first and last occurance of 5 known
+# nucleotides. Returns the trimmed sequence
 def cleaner(sequence):
     # Write the '> Line' to the output file
-    endFirstLine = sequence.find("\n", 1)
+    endFirstLine = sequence.find("\r\n", 1)
     firstPart = sequence[:endFirstLine]
 
     sequence = sequence[endFirstLine:].replace("\r", "").replace("\n","")
-    
+
+    start = 0
+    end = 0
     # Clean the front of sequence
     for i in range(len(sequence)):
         if( 'N' not in sequence[i:i+5]):
@@ -92,9 +97,10 @@ def cleaner(sequence):
             end = j
             break
 
+    # Format the sequence (60 char/line) and return it
     sequence = makeNice(sequence[start:end])
 
-    return firstPart + "\n" + sequence
+    return firstPart + "\r\n" + sequence
 
 
 # This function takes a long string and it returns
@@ -102,11 +108,71 @@ def cleaner(sequence):
 def makeNice(sequence):
     output = ""
     for i in range(0, len(sequence), 60):
-        output += sequence[i:i+60] + "\n"
+        output += sequence[i:i+60] + "\r\n"
 
     return output
+
+# Given a file, counts the length of each sequence and
+# returns a list of (sequence_name, length) tuples.
+def countLengths(filename):
+    # open and read in the input file
+    inputFile = open(filename, "r")
+    entireText = inputFile.read()
+    inputFile.close()
+
+    # ensure the file is in FASTA file format
+    if (entireText[0] == '>'):
+        print("in FASTA format")
+    else:
+        print("invalid format")
+        output.close()
+        return
+
+    output = open(filename + "_lengths.txt", "w")
+
+    # a list of lengths to be returned
+    length_list = []
+
+    pos1 = 0
+    pos2 = 0
+
+    while(True):
+        # Find the sequence until the next '>' char
+        pos1 = pos2
+        pos2 = entireText.find('>', pos1 + 1)
+
+        # If we've gone to the end of the text, exit.
+        if(pos2 < pos1):
+            break
+
+        sequence = entireText[pos1: pos2+1]
+        
+        endFirstLine = sequence.find("\n", 1)
+        name = sequence[1:endFirstLine]
+
+        sequence = sequence[endFirstLine:].replace("\r", "").replace("\n","")
+        length = len(sequence)
+
+        length_list.append( [name, length] )
+
+    # write the list to the output file, and close it
+    output.write(listToString(length_list))
+    output.close()
+    
+    return length_list
+
+
+# Takes the list of sequence names and corresponding lengths,
+# and turns it into a nice string.
+def listToString(l):
+    returnString = ""
+    
+    for i in l:
+        returnString += i[0] + " length: " + str(i[1]) + "\n"
+        
+    return returnString
 
 #####################
 #### Run the code ###
 cleanNT("Micro-Seq.nt")
-
+countLengths("Cleaned_Micro-Seq.nt.txt")
