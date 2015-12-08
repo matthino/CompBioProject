@@ -21,7 +21,7 @@
 def cleanNT(file):
     # open the input file for reading & output for writing
     inputFile = open(file, "r")
-    out = "Cleaned_" + file + ".txt"
+    out = "Cleaned_" + file[:-3] + ".txt"
     output = open(out, 'w')
 
     # read the entire file, and close.
@@ -125,10 +125,9 @@ def countLengths(filename):
         print("in FASTA format")
     else:
         print("invalid format")
-        output.close()
         return
 
-    output = open(filename + "_lengths.txt", "w")
+    output = open(filename[:-4] + "_lengths.txt", "w")
 
     # a list of lengths to be returned
     length_list = []
@@ -175,4 +174,4 @@ def listToString(l):
 #####################
 #### Run the code ###
 cleanNT("Micro-Seq.nt")
-countLengths("Cleaned_Micro-Seq.nt.txt")
+countLengths("Cleaned_Micro-Seq.txt")

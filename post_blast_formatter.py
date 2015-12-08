@@ -1,3 +1,22 @@
+#!/usr/bin/python
+
+####################################
+# Computational Biology Project Code
+#
+# @authors: Matt Hino, Steven Lind
+# @authors: Julia Meng, Shaun Stice
+# @version: December 7, 2015
+####################################
+
+# This function takes post BLAST sequences
+# and prepares it for CLUSTAL input.
+# The code formats sequence by prefixing each 
+# name with a number. It also replaces spaces
+# in the name. Outputs to a new text file.
+#
+# ex.
+# Prior: >Sequence Name; Experiment Number
+# Post:  >1Sequence_Name;_Experiment_Number
 def postBLASTFormat(file):
     # open the file for formatting
     f = open(file, "r")
@@ -79,3 +98,4 @@ def makeNice(sequence):
 #############################################
 #############################################
 postBLASTFormat("Clean_Micro_ident_Final.txt")
+
