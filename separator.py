@@ -12,7 +12,9 @@
 # look through the post blast results and
 # separate the sequences into text files.
 #
-# i.e. all Bacillus in a Bacillus.txt file
+# We are seperating the sequences in the
+# following manner:
+# 1. Bacillus   2. Pseudomonas 3. Other
 def separate(file):
     # open the input file and read
     inputFile = open(file, "r")
@@ -26,10 +28,8 @@ def separate(file):
         print("invalid format")
         return
 
-    # Get a list of all the unique sequence names
-    nameList = nameFinder(entireText)
-
-    print(nameList)
+    # sepList[0] = bacillus, etc. 
+    sepList = []
 
 
 
@@ -37,22 +37,24 @@ def separate(file):
 # In order to separate the sequences, we first
 # need to know all of the different names of
 # the sequences. (Bacillus, Pseudomonas, etc.)
+# This was created to get a general sense of the
+# distribution of organisms, and which would have
+# enough sequences to be put in their own .txt file
 def nameFinder(text):
-    nameList = []
+    nameList = {}
 
     # variables to keep track of the current and next
     # occurance of the '>' character
     pos1 = 0
     pos2 = 0
 
-    
     # For all of the sequences in the text:
     #   - Search for the first and last 5 consecutive
     #      nucleotide subsequence and trim the sequence
     #   - Write the subsequence to the text file
     while(True):
 
-        # Find the sequence until the next '>' char
+        # Find the sequence (goes until the next '>')
         pos1 = pos2
         pos2 = text.find('>', pos1 + 1)
 
@@ -61,21 +63,27 @@ def nameFinder(text):
             break
 
         # Look for the first 'word' after the number in the first line
-        endOfFirstLine = text[pos1:pos2].find("\n")
-        firstLine = text[pos1:endOfFirstLine].split("_")
+        seq = text[pos1:pos2]
+        endOfFirstLine = seq.find("\n", 1)
+        firstLine = seq[:endOfFirstLine].split("_")
         
         # remove all '' from the firstLine list
-        [x for x in firstLine if x]
+        # [firstLine for word in firstLine if not word.strip()]
+
+        print(firstLine)
 
         # Add the name to the list.
         if( len(firstLine) > 1):
-            if( firstLine[1] not in nameList):
-                nameList.append(firstLine[1])
 
+            # First ensure that the name is only alphanumeric
+            regex = re.compile('[^a-zA-Z]')
+            name = regex.sub("", firstLine[1])
             
-    print(nameList)
-    return nameList
+            if name not in nameList:
+                nameList[name] = 0
+            nameList[name] += 1
 
+    print(nameList)
 
 
 ####################################
