@@ -18,20 +18,58 @@
 def separate(file):
     # open the input file and read
     inputFile = open(file, "r")
-    entireText = inputFile.read()
+    text = inputFile.read()
     inputFile.close()
 
     # ensure the file is in FASTA file format
-    if (entireText[0] == '>'):
+    if (text[0] == '>'):
         print("in FASTA format")
     else:
         print("invalid format")
         return
 
     # sepList[0] = bacillus, etc. 
-    sepList = []
+    bacList = []
+    pseudList = []
+    otherList = []
+
+    # for every sequence in the text, put
+    # it into one of the three categories.
+    pos1 = 0
+    pos2 = 0
+    while(True):
+
+        # Find the sequence (goes until the next '>')
+        pos1 = pos2
+        pos2 = text.find('>', pos1 + 1)
+
+        # If we've gone to the end of the text, or no > exits, exit.
+        if(pos2 < pos1):
+            break
+
+        # Look for the first 'word' after the number in the first line
+        seq = text[pos1:pos2]
+        endOfFirstLine = seq.find("\n", 1)
+        firstLine = seq[:endOfFirstLine].split("_")
+
+        if( "Bacillus" in firstLine ):
+            bacList.append(seq)
+        elif( "Pseudomonas" in firstLine ):
+            pseudList.append(seq)
+        else:
+            otherList.append(seq)
 
 
+    writeListToFile(bacList, "Bacillus.txt")
+    writeListToFile(pseudList, "Pseudomonas.txt")
+    writeListToFile(otherList, "OtherOrganisms.txt")
+
+# Writes a list to a file, nicely
+def writeListToFile(theList, theFile):
+    f = open(theFile, "w")
+
+    for item in theList:
+        f.write(item)
 
 
 # In order to separate the sequences, we first
