@@ -8,16 +8,14 @@
 # @version: November 30, 2015
 ####################################
 
+import tester
+
 # Given FASTA formatted sequences in a .nt file (inputFile),
 # this function cleans the sequences by trimming
 # the leading and trailing 'N's. It does this by
 # searching for the first and last occurance of 5 known
 # nucleotides. Then, it outputs the cleaned data to
 # an output file, Cleaned_inputFile.txt).
-#
-# ex.
-# Prior to clean: NNNNANNCCTTGNAATCTCTAANANNANNN
-# After cleaning: CCTTGNAATCTCTAA
 def cleanNT(file):
     # open the input file for reading & output for writing
     inputFile = open(file, "r")
@@ -58,8 +56,6 @@ def cleanNT(file):
 
         # Get the cleaned and nicely formatted sequence
         sequence = cleaner(entireText[pos1:pos2])
-##        print(sequence) # for debugging
-            
 
         # Write the cleaned sequence to the output file
         output.write(sequence)
@@ -173,5 +169,18 @@ def listToString(l):
 
 #####################
 #### Run the code ###
-cleanNT("Micro-Seq.nt")
-countLengths("Cleaned_Micro-Seq.txt")
+
+######## TESTING ########
+##testSeq1 = ">test1\nNNNNANNCCTTGNAATCTCTAANANNANNN"
+##testSeq2 = ">test2\n"
+##testSeq3 = ">test3\nNNNNNNNNN"
+##
+##print( tester.test(">test1\r\nCCTTGNAATCTCTAA\r\n", cleaner(testSeq1)) )
+##print( tester.test(">test2\r\n", cleaner(testSeq2)) )
+##print( tester.test(">test3\r\n", cleaner(testSeq3)) )
+
+
+# cleanNT("Micro-Seq.nt")
+# countLengths("Cleaned_Micro-Seq.txt")
+
+

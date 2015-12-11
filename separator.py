@@ -8,6 +8,8 @@
 # @version: December 9, 2015
 ####################################
 
+import re, tester
+
 # The main purpose of this script is to
 # look through the post blast results and
 # separate the sequences into text files.
@@ -20,6 +22,9 @@ def separate(file):
     inputFile = open(file, "r")
     text = inputFile.read()
     inputFile.close()
+
+    # nameFinder(text) # originally called to get the
+                       # distribution of organisms
 
     # ensure the file is in FASTA file format
     if (text[0] == '>'):
@@ -59,18 +64,16 @@ def separate(file):
         else:
             otherList.append(seq)
 
-
     writeListToFile(bacList, "Bacillus.txt")
     writeListToFile(pseudList, "Pseudomonas.txt")
     writeListToFile(otherList, "OtherOrganisms.txt")
 
-# Writes a list to a file, nicely
+# Writes a list to a file.
 def writeListToFile(theList, theFile):
     f = open(theFile, "w")
 
     for item in theList:
         f.write(item)
-
 
 # In order to separate the sequences, we first
 # need to know all of the different names of
@@ -79,7 +82,7 @@ def writeListToFile(theList, theFile):
 # distribution of organisms, and which would have
 # enough sequences to be put in their own .txt file
 def nameFinder(text):
-    nameList = {}
+    names = {}
 
     # variables to keep track of the current and next
     # occurance of the '>' character
@@ -108,7 +111,6 @@ def nameFinder(text):
         # remove all '' from the firstLine list
         # [firstLine for word in firstLine if not word.strip()]
 
-        print(firstLine)
 
         # Add the name to the list.
         if( len(firstLine) > 1):
@@ -117,17 +119,19 @@ def nameFinder(text):
             regex = re.compile('[^a-zA-Z]')
             name = regex.sub("", firstLine[1])
             
-            if name not in nameList:
-                nameList[name] = 0
-            nameList[name] += 1
+            if name not in names:
+                names[name] = 0
+            names[name] += 1
 
-    print(nameList)
+    print(names)
 
 
 ####################################
 separate("Clean_Micro_ident_Final_clean.txt")
 
 
+
+######## TESTING ###############
 
 
         

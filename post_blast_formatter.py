@@ -8,6 +8,8 @@
 # @version: December 7, 2015
 ####################################
 
+import tester
+
 # This function takes post BLAST sequences
 # and prepares it for CLUSTAL input.
 # The code formats sequence by prefixing each 
@@ -61,12 +63,9 @@ def postBLASTFormat(file):
         output.write(sequence)
         output.write("\r\n")
 
-
     # close and exit
     output.close()
     print("done cleaning.")
-
-
 
 
 # Formats the first line in each FASTA sequence and also
@@ -98,4 +97,13 @@ def makeNice(sequence):
 #############################################
 #############################################
 postBLASTFormat("Clean_Micro_ident_Final.txt")
+
+
+######## TESTING ###################
+##testSeq1 = ">Organism Name\n"
+##result1 = formatter(testSeq1,1)
+##print( tester.test(">1_Organism_Name\r\n", result1) )
+##testSeq2 = ">OrganismName\n"
+##result2 = formatter(testSeq2, 2)
+##print( tester.test(">2_OrganismName\r\n", result2) )
 
